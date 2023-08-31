@@ -8,6 +8,7 @@ public class GameMode : MonoBehaviour
     public GameObject cellParent;
     GameObject[] cellObjects;
     Text[] cellTexts = new Text[81];
+    public Text NumCorrectTextBox;
 
     int[] currentSolution = new int[81];
 
@@ -133,5 +134,84 @@ public class GameMode : MonoBehaviour
         }
         currentSolution = preset3Solved;
     }
+
+    public void solvePuzzle()
+    {
+        int numFilled = 0;
+
+        foreach (Text text in cellTexts)
+        {
+            if(int.Parse(text.text) != 0)
+            {
+                numFilled++;
+            }
+        }
+
+        //Cells start at 720, 780 and end at 1200, 300
+        //They both increment by 60
+        List<Text> current = new List<Text>();
+        int maxOccupied = 0; ;
+        int currentOccupied = 0;
+
+        //check columns
+        for (int i = 720; i <= 1200; i += 60)
+        {
+            for (int j = 780; j >= 300; j--)
+            {
+                foreach(Text obj in cellTexts)
+                {
+                    if (obj.transform.position.x == i && obj.transform.position.y == j && int.Parse(obj.text) != 0)
+                        currentOccupied++;
+                }
+            }
+            if (currentOccupied > maxOccupied)
+            {
+                current.Clear();
+
+                for (int k = 0; k < 81; k++)
+                {
+                    if (cellTexts[k].transform.position.x == i)
+                    {
+                        current.Add(cellTexts[k]);
+
+                    }
+                }
+                maxOccupied = currentOccupied;
+            }
+            currentOccupied = 0;
+        }
+
+
+        //check rows
+        for (int j = 780; j >= 300; j--)
+        {
+            for (int i = 720; i <= 1200; i += 60)
+            {
+                foreach (Text obj in cellTexts)
+                {
+                    if (obj.transform.position.x == i && obj.transform.position.y == j && int.Parse(obj.text) != 0)
+                        currentOccupied++;
+                }
+            }
+            if (currentOccupied > maxOccupied)
+            {
+                current.Clear();
+                for (int k = 0; k < 81; k++)
+                {
+                    if (cellTexts[k].transform.position.y == j)
+                    {
+                        current.Add(cellTexts[k]);
+                    }
+                }
+                maxOccupied = currentOccupied;
+            }
+
+            currentOccupied = 0;
+        }
+
+
+        
+    }
+
 }
 
