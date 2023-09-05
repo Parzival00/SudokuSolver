@@ -157,136 +157,237 @@ public class GameMode : MonoBehaviour
     public void solvePuzzle()
     {
         int numFilled = getNumFilled();
-
-        for(int x = 0; x < numToFill +120; x++)
+        int numCheck = 1;
+        int numsPlaced = 0;
+        
+        while(numCheck <= 9)
         {
-            List<Text> current = findNext();
-            List<int> currentInts = new List<int>();
-            int missing = 0;
-
-
-
-            int zeros = 0;
-            foreach(Text t in current)
+            foreach(Text t in cellTexts)
             {
-                currentInts.Add(int.Parse(t.text));
-                if (int.Parse(t.text) == 0)
+                if(int.Parse(t.text) == 0)
                 {
-                    zeros++;
-                }
-            }
-
-            if(zeros == 1)
-            {
-                foreach (Text t in current)
-                {
-                    if (int.Parse(t.text) == 0)
+                    if(checkCell(t ,numCheck))
                     {
-                        t.text = getMissingNumber(currentInts).ToString();
+                        t.text = numCheck.ToString();
+                        numsPlaced++;
                     }
                 }
             }
-            
-            //checking each empty cell if the missing number fits
-            for(int i = 0; i < current.Count; i++)
-            {
-                if(currentInts[i] == 0)
-                {
-
-                    
-                    if (current[2].transform.position.x == current[1].transform.position.x)
-                    {
-                        //check columns
-                        for (int j = 720; j <= 1200; j += 60)
-                        {
-                            //find the first missing number in the array
-                            missing = getMissingNumber(currentInts);
-                            
-                            foreach (Text obj in current)
-                            {
-
-                                //Debug.Log(obj.transform.position);
-                                if (obj.transform.position.x == j && obj.transform.position.y == current[i].transform.position.y && int.Parse(obj.text) == 0)
-                                {
-                                    if(checkAvailable(obj, missing))
-                                    {
-                                        obj.text = missing.ToString();
-                                        Debug.Log(obj.text + "a");
-                                        break;
-                                    }
-                                    
-                                }
-                                    
-                            }
-                        }
-                    }
-                    else if(current[2].transform.position.y == current[1].transform.position.y)
-                    {
-                        //check rows
-                        for (int j = 780; j >= 300; j-= 60)
-                        {
-                            //find the first missing number in the array
-                            missing = getMissingNumber(currentInts);
-                            
-                            foreach (Text obj in cellTexts)
-                            {
-                                //Debug.Log("Filled2");
-                                if (obj.transform.position.x == current[i].transform.position.x && obj.transform.position.y == j && int.Parse(obj.text) == 0)
-                                {
-
-                                    if (checkAvailable(obj, missing))
-                                    {
-                                        obj.text = missing.ToString();
-                                        Debug.Log(obj.text + "a");
-                                        break;
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //check nonettes
-                        for(int j = 1; j <=3; j++)
-                        {
-                            for (int k = 1; k <= 3; k++)
-                            {
-                                //find the first missing number in the array
-                                missing = getMissingNumber(currentInts);
-
-                                foreach(Text obj in cellTexts)
-                                {
-                                    if (cellTexts[k].transform.position.x / 180 == i && cellTexts[k].transform.position.y / 180 == j)
-                                    {
-                                        if (checkAvailable(obj, missing))
-                                        {
-                                            obj.text = missing.ToString();
-                                            Debug.Log(obj.text + "a");
-                                            break;
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+            numCheck++;
         }
+
+        //look for the nonette, column, then row with the least amount of 0s
+        //if there is only 1, fill it in
+
+
+
+
+
         
 
+        //List<Text> current = new List<Text>();
+
+        //foreach(Text t in cellTexts)
+        //{
+        //    current.Add(t);
+        //}
+        //for (int x = 0; x < numToFill + 120; x++)
+        //{
+
+
+        //    current = findNext();
+        //    List<int> currentInts = new List<int>();
+        //    int missing = 0;
+
+
+
+        //    int zeros = 0;
+        //    foreach (Text t in current)
+        //    {
+        //        currentInts.Add(int.Parse(t.text));
+        //        if (int.Parse(t.text) == 0)
+        //        {
+        //            zeros++;
+        //        }
+        //    }
+
+        //    if (zeros == 1)
+        //    {
+        //        foreach (Text t in current)
+        //        {
+        //            if (int.Parse(t.text) == 0)
+        //            {
+        //                t.text = getMissingNumber(currentInts).ToString();
+        //            }
+        //        }
+        //    }
+
+
+
+        //    //checking each empty cell if the missing number fits
+        //    for (int i = 0; i < current.Count; i++)
+        //    {
+        //        if (currentInts[i] == 0)
+        //        {
+
+
+        //            if (current[2].transform.position.x == current[1].transform.position.x)
+        //            {
+        //                //check columns
+        //                for (int j = 720; j <= 1200; j += 60)
+        //                {
+        //                    //find the first missing number in the array
+        //                    missing = getMissingNumber(currentInts);
+
+        //                    foreach (Text obj in current)
+        //                    {
+
+        //                        //Debug.Log(obj.transform.position);
+        //                        if (obj.transform.position.x == j && obj.transform.position.y == current[i].transform.position.y && int.Parse(obj.text) == 0)
+        //                        {
+        //                            if (checkAvailable(obj, missing))
+        //                            {
+        //                                obj.text = missing.ToString();
+        //                                Debug.Log(obj.text + "a");
+        //                                break;
+        //                            }
+
+        //                        }
+
+        //                    }
+        //                }
+        //            }
+        //            else if (current[2].transform.position.y == current[1].transform.position.y)
+        //            {
+        //                //check rows
+        //                for (int j = 780; j >= 300; j -= 60)
+        //                {
+        //                    //find the first missing number in the array
+        //                    missing = getMissingNumber(currentInts);
+
+        //                    foreach (Text obj in cellTexts)
+        //                    {
+        //                        //Debug.Log("Filled2");
+        //                        if (obj.transform.position.x == current[i].transform.position.x && obj.transform.position.y == j && int.Parse(obj.text) == 0)
+        //                        {
+
+        //                            if (checkAvailable(obj, missing))
+        //                            {
+        //                                obj.text = missing.ToString();
+        //                                Debug.Log(obj.text + "a");
+        //                                break;
+        //                            }
+        //                        }
+
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //check nonettes
+        //                for (int j = 1; j <= 3; j++)
+        //                {
+        //                    for (int k = 1; k <= 3; k++)
+        //                    {
+        //                        //find the first missing number in the array
+        //                        missing = getMissingNumber(currentInts);
+
+        //                        foreach (Text obj in cellTexts)
+        //                        {
+        //                            if (cellTexts[k].transform.position.x / 180 == i && cellTexts[k].transform.position.y / 180 == j)
+        //                            {
+        //                                if (checkAvailable(obj, missing))
+        //                                {
+        //                                    obj.text = missing.ToString();
+        //                                    Debug.Log(obj.text + "a");
+        //                                    break;
+        //                                }
+        //                            }
+        //                        }
+
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+
         int count = 0;
-        for(int i = 0; i < 81; i++)
+        for (int i = 0; i < 81; i++)
         {
-            if(currentSolution[i] == int.Parse(cellTexts[i].text))
+            if (currentSolution[i] == int.Parse(cellTexts[i].text))
             {
                 count++;
             }
         }
-        int correct = count - numFilled;
-        NumCorrectTextBox.text = "Numbers Correct: " + correct;
+        int correct = count - numFilled - 1;
+        NumCorrectTextBox.text = "Numbers Correct: " + correct + "\nNumbers Placed: " + numsPlaced;
     }
+    
+    bool checkCell(Text t, int value)
+    {
+        List<Text> current = new List<Text>();
+        List<Text> toRemove = new List<Text>();
+        //check the associated nonette
+        foreach (Text obj in cellTexts)
+        {
+            if (t.transform.position.x / 180 == obj.transform.position.x / 180 && t.transform.position.y / 180 == obj.transform.position.y / 180)
+            {
+                current.Add(obj);
+            }
+        }
+
+        foreach (Text obj in current)
+        {
+            //if the value currently being searched for is already in the nonette, its wrong
+            if(int.Parse(obj.text) == value)
+            {
+                return false;
+            }
+
+            if (int.Parse(obj.text) == 0)
+            {
+                foreach (Text checkText in cellTexts)
+                {
+                    //checking columns if the value fits
+                    if (checkText.transform.position.y == obj.transform.position.y)
+                    {
+                        if (int.Parse(checkText.text) == value)
+                        {
+                            toRemove.Add(obj);
+                        }
+                    }
+                    //checking rows if the value fits
+                    if (checkText.transform.position.x == obj.transform.position.x)
+                    {
+                        if (int.Parse(checkText.text) == value)
+                        {
+                            toRemove.Add(obj);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                toRemove.Add(obj);
+            }
+        }
+
+        foreach(Text obj in toRemove)
+        {
+            if (current.Contains(obj))
+            {
+                current.Remove(obj);
+            }
+        }
+
+        if (current.Count == 1)
+            return true;
+        else return false;
+    }
+
+
 
     bool checkExclusive(List<Text> t, int n)
     {
@@ -304,6 +405,30 @@ public class GameMode : MonoBehaviour
         }
         return true;
     }
+
+    int getExclusiveIndex(List<Text> t, int n)
+    {
+        int count = 0;
+        foreach (Text obj in t)
+        {
+            if (checkAvailable(obj, n))
+            {
+                count++;
+            }
+        }
+        if (count != 1)
+        {
+            return -1;
+        }
+        foreach (Text obj in t)
+        {
+            if(int.Parse(obj.text) == n)
+            {
+                return t.IndexOf(obj);
+            }
+        }
+        return -1;
+    }
     bool checkAvailable(Text obj, int n)
     {
         //checking rows
@@ -316,11 +441,7 @@ public class GameMode : MonoBehaviour
                     return false;
                 }
             }
-        }
-
-        //checking columns
-        foreach (Text t in cellTexts)
-        {
+            //checking columns
             if (t.transform.position.x == obj.transform.position.x)
             {
                 if (int.Parse(t.text) == n)
@@ -328,10 +449,16 @@ public class GameMode : MonoBehaviour
                     return false;
                 }
             }
+
+            //checking nonettes
+            if (t.transform.position.x / 180 == obj.transform.position.x/180 && t.transform.position.y / 180 == obj.transform.position.y / 180)
+            {
+                if (int.Parse(t.text) == n)
+                {
+                    return false;
+                }
+            }
         }
-
-        //checking nonettes
-
 
         return true;
     }
@@ -370,6 +497,33 @@ public class GameMode : MonoBehaviour
         List<Text> current = new List<Text>();
         int maxOccupied = 0; ;
         int currentOccupied = 0;
+
+        //check nonettes
+        for (int i = 1; i <= 3; i++)
+        {
+            for (int j = 1; j <= 3; j++)
+            {
+                foreach (Text obj in cellTexts)
+                {
+                    if (obj.transform.position.x / 180 == i && obj.transform.position.y / 180 == j && int.Parse(obj.text) != 0)
+                        currentOccupied++;
+                }
+
+                if (currentOccupied > maxOccupied && currentOccupied < 9)
+                {
+                    current.Clear();
+                    for (int k = 0; k < cellTexts.Length; k++)
+                    {
+                        if (cellTexts[k].transform.position.x / 180 == i && cellTexts[k].transform.position.y / 180 == j)
+                        {
+                            current.Add(cellTexts[k]);
+                        }
+                    }
+                    maxOccupied = currentOccupied;
+                }
+            }
+        }
+
         //check columns
         for (int i = 720; i <= 1200; i += 60)
         {
@@ -426,31 +580,7 @@ public class GameMode : MonoBehaviour
             currentOccupied = 0;
         }
 
-        //check nonettes
-        for (int i = 1; i <= 3; i ++)
-        {
-            for (int j = 1; j <= 3; j++)
-            {
-                foreach (Text obj in cellTexts)
-                {
-                    if (obj.transform.position.x / 180 == i && obj.transform.position.y / 180 == j && int.Parse(obj.text) != 0)
-                        currentOccupied++;
-                }
-
-                if (currentOccupied > maxOccupied && currentOccupied < 9)
-                {
-                    current.Clear();
-                    for (int k = 0; k < cellTexts.Length; k++)
-                    {
-                        if (cellTexts[k].transform.position.x / 180 == i && cellTexts[k].transform.position.y / 180 == j)
-                        {
-                            current.Add(cellTexts[k]);
-                        }
-                    }
-                    maxOccupied = currentOccupied;
-                }
-            }
-        }
+       
                 return current;
     }
 }
